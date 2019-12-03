@@ -57,6 +57,8 @@ impl AugmentedMatrix {
 
                 self.rows[b] = row;
             }
+
+			dbg!(self.rows.clone());
         }
 
         self
@@ -79,19 +81,12 @@ impl AugmentedMatrix {
 
 
 
-///
-/// -x + y + z  = 0
-/// 2x + 2y + z = 1
-/// 3x + 4y - 2z = 5
-/// 
-/// 
-
 fn main() {
     let input = AugmentedMatrix::from_rows(vec![
-        Row::from_cols(vec![3.0, -1.0, 1.0, 1.0, 0.0]),
-        Row::from_cols(vec![2.0, 2.0, 2.0, 1.0, 1.0]),
-        Row::from_cols(vec![3.0, 3.0, 4.0, -2.0, 5.0]),
-        Row::from_cols(vec![7.0, 4.0, -3.0, -14.0, 17.0])
+        Row::from_cols(vec![1.0, 1.0, 1.0, 1.0, 0.0]),
+        Row::from_cols(vec![8.0, 4.0, 2.0, 1.0, 1.0]),
+        Row::from_cols(vec![27.0, 9.0, 3.0, 1.0, 0.0]),
+        Row::from_cols(vec![0.0, 0.0, 0.0, 1.0, 3.0])
     ]);
 
     dbg!(input.transform().solve());
