@@ -58,14 +58,53 @@ runToEnd program isp =
         if finished then nextProgram
         else runToEnd nextProgram nextIsp
 
+runToEndWithParams program noun verb =
+    let p1 = writeCell program 1 noun
+        p2 = writeCell p1 2 verb
+    in
+        runToEnd p2 0
+
+part1 :: Program -> Program
+part1 p1 =
+    let p2 = writeCell p1 1 12
+        p3 = writeCell p2 2 2
+    in
+        runToEnd p3 0
+
+
+
+
+solve1d :: Program -> Integer -> Integer -> Integer -> (Bool, (Integer, Integer))
+solve1d program expect otherDim current =
+    if current > 99 then (False, (0, 0))
+    else
+        let end = runToEndWithParams program otherDim current
+            (0, res) = head end
+        in if res == expect
+            then (True, (otherDim, current))
+            else solve1d program expect otherDim (current + 1)
+
+solve2d :: Program -> Integer -> Integer -> (Bool, (Integer, Integer))
+solve2d program expect current =
+    if current > 99 then (False, (0, 0))
+    else
+        let (finished, res) = solve1d program expect current 0
+        in if finished
+            then (True, res)
+            else solve2d program expect (current + 1)
+
+solve :: Program -> Integer -> (Integer, Integer)
+solve program expect =
+    let (True, res) = solve2d program expect 0
+    in
+        res
+
 main = do
     inputFile <- openFile "input" ReadMode
     input <- hGetContents inputFile
 
     let p1 = initProgram input
-    let p2 = writeCell p1 1 12
-    let p3 = writeCell p2 2 2
 
-    putStrLn (show (runToEnd p3 0))
-
+    putStrLn (show (part1 p1))
+    putStrLn (show (solve p1 19690720))
 
