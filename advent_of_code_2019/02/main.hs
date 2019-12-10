@@ -105,6 +105,6 @@ main = do
 
     let p1 = initProgram input
 
-    putStrLn (show (part1 p1))
-    putStrLn (show (solve p1 19690720))
+    putStrLn $ show $ part1 p1
+    putStrLn $ show $ solve p1 19690720
 
