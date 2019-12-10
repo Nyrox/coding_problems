@@ -76,22 +76,60 @@ step (program, isp) =
 
     in case opcode operator of
         99 -> Halt
+        -- Add
         1 -> 
             let lhs = readParam 1
                 rhs = readParam 2
                 out = readCell program (isp + 3)
             in Continue (writeCell program out (lhs + rhs), isp + 4)
+        -- Mul
         2 ->
             let lhs = readParam 1
                 rhs = readParam 2
                 out = readCell program (isp + 3)
             in Continue (writeCell program out (lhs * rhs), isp + 4)
+        -- Input
         3 ->
             let out = readCell program (isp + 1)
             in NeedInput (\input -> (writeCell program out input, isp + 2))
+        -- Output
         4 ->
             let val = readParam 1
             in Output (program, isp + 2) val
+        -- Jump if true
+        5 -> 
+            let cond = readParam 1
+                val  = readParam 2
+            in if not $ cond == 0 then
+                Continue (program, val)
+            else 
+                Continue (program, isp + 3)
+        -- Jump If False
+        6 ->
+            let cond = readParam 1
+                val  = readParam 2
+            in if cond == 0 then
+                Continue (program, val)
+            else 
+                Continue (program, isp + 3)
+        -- Less Than
+        7 ->
+            let lhs = readParam 1
+                rhs = readParam 2
+                out = readCell program (isp + 3)
+            in if lhs < rhs then
+                Continue (writeCell program out 1, isp + 4)
+            else 
+                Continue (writeCell program out 0, isp + 4)
+        -- Equals
+        8 -> 
+            let lhs = readParam 1
+                rhs = readParam 2
+                out = readCell program (isp + 3)
+            in if lhs == rhs then
+                Continue (writeCell program out 1, isp + 4)
+            else 
+                Continue (writeCell program out 0, isp + 4)
 
         otherwise -> error $ "unknown opcode: " ++ show operator
 
